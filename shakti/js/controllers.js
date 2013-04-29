@@ -1,8 +1,8 @@
-define(['player'], function (player) {
+define([], function () {
     'use strict';
 
     return {
-	ArtistCtrl: function ($scope, $http) {
+	ArtistCtrl: function ($scope, $http, Player) {
 
 	    $http.get('/api/artists').success(function(data) {
 	    	$scope.artists = data;
@@ -15,16 +15,16 @@ define(['player'], function (player) {
 	    };
 
 	    $scope.playTrack = function (track) {
-	    	player.setTrack(track);
-	    	player.play()
+	    	Player.setTrack(track);
+	    	Player.play()
 	    };
 	},
 
-	PlayerCtrl: function ($scope) {
-	    $scope.player = player;
+	PlayerCtrl: function ($scope, Player) {
+	    $scope.player = Player;
 
 	    $scope.toggleText = function () {
-		return player.isPlaying() ? 'Pause' : 'Play';
+		return Player.isPlaying() ? 'Pause' : 'Play';
 	    }
 	}
     }

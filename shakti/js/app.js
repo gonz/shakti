@@ -1,4 +1,4 @@
-define(['angular', 'controllers'], function (angular, controllers) {
+define(['angular', 'controllers', 'player'], function (angular, controllers, Player) {
     'use strict';
 
     var app = angular.module('shakti', []);
@@ -14,6 +14,10 @@ define(['angular', 'controllers'], function (angular, controllers) {
 	    })
 	    .otherwise({ redirectTo: '/artists' });
     }]);
+
+    app.factory('Player', function() {
+	return new Player();
+    });
 
     angular.bootstrap(document, ['shakti']);
 
