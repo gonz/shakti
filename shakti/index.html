@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:ng="http://angularjs.org">
+  <head>
+    <title>Shakti Player</title>
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+  </head>
+  <body>
+    <div class="container">
+
+      <div ng-controller="PlayerCtrl">
+	<div>Track: {{ player.track.title }} ({{ player.status }})</div>
+	<a ng-click="player.togglePlay()">{{ toggleText() }}</a> |
+	<a ng-click="player.stop()">Stop</a>
+      </div>
+
+      <div ng-view></div>
+    </div>
+
+    <script data-main="js/boot" src="js/lib/require.js"></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+<ul>
+  <li ng-repeat="artist in artists">
+    <a ng-click="loadTracks(artist)">{{ artist.name }}</a>
+    <ul>
+      <li ng-repeat="album in artist.albums">
+	{{ album.name }}
+	<ul>
+	  <li ng-repeat="track in album.tracks">
+	    <a ng-click="playTrack(track)">{{ track.title }}</a>
+	  </li>
+	</ul>
+      </li>
+    </ul>
+  </li>
+</ul>
