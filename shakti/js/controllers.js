@@ -14,9 +14,8 @@ define([], function () {
 	    	});
 	    };
 
-	    $scope.playTrack = function (track) {
-	    	Player.setTrack(track);
-	    	Player.play()
+	    $scope.addTrack = function (track) {
+		Player.appendTrack(track, false);
 	    };
 	},
 
@@ -25,7 +24,7 @@ define([], function () {
 
 	    $scope.toggleText = function () {
 		return Player.isPlaying() ? 'Pause' : 'Play';
-	    }
+	    };
 	}
     }
 });

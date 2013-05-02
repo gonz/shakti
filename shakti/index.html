@@ -6,15 +6,23 @@
     <link rel="stylesheet" href="css/bootstrap.css">
   </head>
   <body>
-    <div class="container">
+    <div class="row">
 
-      <div ng-controller="PlayerCtrl">
-	<div>Track: {{ player.track.title }} ({{ player.status }})</div>
+      <div ng-controller="PlayerCtrl" class="span4">
+	<div>Track: {{ player.currentTrack().title }} ({{ player.status }})</div>
+	<a ng-click="player.prevTrack()">Prev</a> |
 	<a ng-click="player.togglePlay()">{{ toggleText() }}</a> |
-	<a ng-click="player.stop()">Stop</a>
+	<a ng-click="player.stop()">Stop</a> |
+	<a ng-click="player.nextTrack()">Next</a>
+
+	<ul>
+	  <li ng-repeat="track in player.playlist.tracks">
+	    {{ $index +1 }} - <a ng-click="player.playPlaylistIndex($index)">{{ track.title }}</a>
+	  </li>
+	</ul>
       </div>
 
-      <div ng-view></div>
+      <div ng-view class="span8"></div>
     </div>
 
     <script data-main="js/boot" src="js/lib/require.js"></script>

@@ -1,57 +1,92 @@
-define([], function () {
+define(['playlist'], function (Playlist) {
     'use strict';
 
     function Player() {
-	this.track = null;
 	this.audio = new Audio();
 	this.mimetype = 'audio/ogg';
-	this.status = null;
+	this.status = 'STOPPED';
+	this.playlist = new Playlist();
     }
 
     Player.PAUSED = 'PAUSED';
     Player.PLAYING = 'PLAYING';
     Player.STOPPED = 'STOPPED';
 
-    Player.prototype.setTrack = function (track) {
-	this.track = track;
-	this._loadTrack();
+    Player.prototype._loadTrackAudio = function (track) {
+	this.audio.pause();
+        this.audio.src = track.files[this.mimetype];
+        this.audio.load();
+	this.status = Player.STOPPED;
     };
 
+    Player.prototype.currentTrack = function (track) {
+	return this.playlist.currentTrack();
+    };
+
+    Player.prototype.appendTrack = function (track) {
+	this.playlist.append(track);
+    };
+
+    Player.prototype.playPlaylistIndex = function (index) {
+	this.playlist.setCurrentTrack(index);
+	this.play();
+    }
+
     Player.prototype.play = function () {
-	if (this.track) {
+	var currentTrack, skip_load;
+
+	currentTrack = this.currentTrack();
+	skip_load = this.status === Player.PAUSED;
+
+	if (currentTrack) {
+	    if (!skip_load) {
+		this._loadTrackAudio(currentTrack);
+	    }
 	    this.audio.play();
 	    this.status = Player.PLAYING;
 	}
     };
 
     Player.prototype.pause = function () {
-	if (this.track) {
+	if (this.currentTrack()) {
 	    this.audio.pause();
 	    this.status = Player.PAUSED;
 	}
     };
 
     Player.prototype.stop = function () {
-	if (this.track) {
-	    this.audio.pause();
-	    this._loadTrack(); // Change to seek 0...
-	    this.status = Player.STOPPED;
+	if (this.currentTrack()) {
+	    this._loadTrackAudio(this.currentTrack());
 	}
     };
 
+    Player.prototype._switchTrack = function (playlist_load_fn) {
+	var nextTrack = this.playlist[playlist_load_fn]();
+
+	if (!nextTrack) {
+	    this.stop();
+	} else if (this.status === Player.PLAYING) {
+	    this.play();
+	}
+	return nextTrack;
+    }
+
+    Player.prototype.nextTrack = function () {
+	this._switchTrack('loadNext');
+    };
+
+    Player.prototype.prevTrack = function () {
+	this._switchTrack('loadPrevious');
+    };
+
     Player.prototype.togglePlay = function () {
-	if (this.track) {
+	if (this.currentTrack()) {
 	    this.isPlaying() ? this.pause() : this.play();
 	}
     };
 
     Player.prototype.isPlaying = function () {
 	return this.status === Player.PLAYING;
-    };
-
-    Player.prototype._loadTrack = function () {
-        this.audio.src = this.track.files[this.mimetype];
-        this.audio.load();
     };
 
     return Player
