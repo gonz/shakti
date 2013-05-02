@@ -20,7 +20,12 @@ define([], function () {
 	},
 
 	PlayerCtrl: function ($scope, Player) {
-	    $scope.player = Player;
+	    function bindPlayer() { $scope.player = Player; }
+
+	    bindPlayer();
+	    Player.audio.addEventListener('timeupdate', function () {
+		$scope.$apply(bindPlayer);
+	    }.bind(this), false);
 
 	    $scope.toggleText = function () {
 		return Player.isPlaying() ? 'Pause' : 'Play';

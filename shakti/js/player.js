@@ -2,9 +2,16 @@ define(['playlist'], function (Playlist) {
     'use strict';
 
     function Player() {
-	this.audio = new Audio();
 	this.mimetype = 'audio/ogg';
 	this.status = 'STOPPED';
+
+	this.audio = new Audio();
+	this.audio.addEventListener('ended', this.onSongEnd.bind(this), false);
+	this.audio.addEventListener('timeupdate', function () {
+	    this.playTimeSeconds = parseInt(this.audio.currentTime, 10);
+	    this.playTimePercentage = this.playTimeSeconds * 100 / this.currentTrack().length
+	}.bind(this), false);
+
 	this.playlist = new Playlist();
     }
 
@@ -14,6 +21,8 @@ define(['playlist'], function (Playlist) {
 
     Player.prototype._loadTrackAudio = function (track) {
 	this.audio.pause();
+	this.playTimeSeconds = 0;
+	this.playTimePercentage = 0;
         this.audio.src = track.files[this.mimetype];
         this.audio.load();
 	this.status = Player.STOPPED;
@@ -87,6 +96,10 @@ define(['playlist'], function (Playlist) {
 
     Player.prototype.isPlaying = function () {
 	return this.status === Player.PLAYING;
+    };
+
+    Player.prototype.onSongEnd = function () {
+	this.nextTrack();
     };
 
     return Player

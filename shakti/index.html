@@ -9,7 +9,12 @@
     <div class="row">
 
       <div ng-controller="PlayerCtrl" class="span4">
-	<div>Track: {{ player.currentTrack().title }} ({{ player.status }})</div>
+	<div>Track: {{ player.currentTrack().title }} ({{ player.status }}) {{ player.playTimeSeconds | formatTime }} - {{ player.currentTrack().length | formatTime}}</div>
+
+	<div class="progress">
+	  <div class="bar" style="width: {{ player.playTimePercentage }}%;"></div>
+	</div>
+
 	<a ng-click="player.prevTrack()">Prev</a> |
 	<a ng-click="player.togglePlay()">{{ toggleText() }}</a> |
 	<a ng-click="player.stop()">Stop</a> |

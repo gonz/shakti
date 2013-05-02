@@ -1,4 +1,9 @@
-define(['angular', 'controllers', 'player'], function (angular, controllers, Player) {
+define([
+    'angular',
+    'controllers',
+    'filters',
+    'player'
+], function (angular, controllers, filters, Player) {
     'use strict';
 
     var app = angular.module('shakti', []);
@@ -18,6 +23,8 @@ define(['angular', 'controllers', 'player'], function (angular, controllers, Pla
     app.factory('Player', function() {
 	return new Player();
     });
+
+    app.filter('formatTime', filters.formatTime);
 
     angular.bootstrap(document, ['shakti']);
 
